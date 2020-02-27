@@ -4,14 +4,16 @@ using HotelManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HotelManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200227184947_MainTablesFix")]
+    partial class MainTablesFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace HotelManager.Data.Migrations
 
             modelBuilder.Entity("HotelManager.Models.Client", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
@@ -43,19 +45,19 @@ namespace HotelManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReservationId")
+                    b.Property<int?>("ReservationID")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("ReservationId");
+                    b.HasIndex("ReservationID");
 
                     b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Employee", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DateFired")
@@ -94,14 +96,14 @@ namespace HotelManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Reservation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -109,37 +111,37 @@ namespace HotelManager.Data.Migrations
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("BreakfastIncluded")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ClientId")
+                    b.Property<string>("ClientID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("DepartureDate")
+                    b.Property<DateTime>("DeparatureDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasBreakfast")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsAllInclusive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("RoomID")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientID");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("RoomID");
 
                     b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Room", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -164,7 +166,7 @@ namespace HotelManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Rooms");
                 });
@@ -373,20 +375,20 @@ namespace HotelManager.Data.Migrations
                 {
                     b.HasOne("HotelManager.Models.Reservation", null)
                         .WithMany("Clients")
-                        .HasForeignKey("ReservationId");
+                        .HasForeignKey("ReservationID");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Reservation", b =>
                 {
                     b.HasOne("HotelManager.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId")
+                        .HasForeignKey("ClientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HotelManager.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("RoomID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -4,14 +4,16 @@ using HotelManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HotelManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200227181146_MainTablesAdded")]
+    partial class MainTablesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,89 +21,9 @@ namespace HotelManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("HotelManager.Models.Client", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAdult")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
-
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("HotelManager.Models.Employee", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DateFired")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateHired")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EGN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MiddleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
-                });
-
             modelBuilder.Entity("HotelManager.Models.Reservation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -109,37 +31,42 @@ namespace HotelManager.Data.Migrations
                     b.Property<DateTime>("ArrivalDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("BreakfastIncluded")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ClientId")
+                    b.Property<string>("ClientID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("DepartureDate")
+                    b.Property<DateTime>("DeparatureDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("HasBreakfast")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsAllInclusive")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("RoomID")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientID");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("RoomID");
 
                     b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Room", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -164,7 +91,7 @@ namespace HotelManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Rooms");
                 });
@@ -232,6 +159,10 @@ namespace HotelManager.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -283,6 +214,8 @@ namespace HotelManager.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -371,22 +304,79 @@ namespace HotelManager.Data.Migrations
 
             modelBuilder.Entity("HotelManager.Models.Client", b =>
                 {
-                    b.HasOne("HotelManager.Models.Reservation", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("ReservationId");
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAdult")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ReservationID")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ReservationID");
+
+                    b.HasDiscriminator().HasValue("Client");
+                });
+
+            modelBuilder.Entity("HotelManager.Models.Employee", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<DateTime?>("DateFired")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateHired")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EGN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnName("Employee_FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnName("Employee_LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Employee");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Reservation", b =>
                 {
                     b.HasOne("HotelManager.Models.Client", "Client")
                         .WithMany()
-                        .HasForeignKey("ClientId")
+                        .HasForeignKey("ClientID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HotelManager.Models.Employee", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("EmployeeId");
+
                     b.HasOne("HotelManager.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("RoomID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -440,6 +430,13 @@ namespace HotelManager.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HotelManager.Models.Client", b =>
+                {
+                    b.HasOne("HotelManager.Models.Reservation", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("ReservationID");
                 });
 #pragma warning restore 612, 618
         }
