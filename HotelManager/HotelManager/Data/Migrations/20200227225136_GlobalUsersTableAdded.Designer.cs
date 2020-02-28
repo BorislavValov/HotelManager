@@ -4,14 +4,16 @@ using HotelManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HotelManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200227225136_GlobalUsersTableAdded")]
+    partial class GlobalUsersTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,12 @@ namespace HotelManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("Clients");
                 });
@@ -403,17 +410,19 @@ namespace HotelManager.Data.Migrations
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("ReservationId");
-
                     b.HasDiscriminator().HasValue("User");
+                });
+
+            modelBuilder.Entity("HotelManager.Models.Client", b =>
+                {
+                    b.HasOne("HotelManager.Models.Reservation", null)
+                        .WithMany("Clients")
+                        .HasForeignKey("ReservationId");
                 });
 
             modelBuilder.Entity("HotelManager.Models.Reservation", b =>
                 {
-                    b.HasOne("HotelManager.Models.User", "Client")
+                    b.HasOne("HotelManager.Models.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -475,13 +484,6 @@ namespace HotelManager.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("HotelManager.Models.User", b =>
-                {
-                    b.HasOne("HotelManager.Models.Reservation", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("ReservationId");
                 });
 #pragma warning restore 612, 618
         }

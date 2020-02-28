@@ -11,7 +11,7 @@ namespace HotelManager.Models
     {
         public Reservation()
         {
-            Clients = new List<Client>();
+            Clients = new List<User>();
         }
 
         [Key]
@@ -28,9 +28,9 @@ namespace HotelManager.Models
         public string ClientId { get; set; }
         [ForeignKey("ClientId")]
         [Required]
-        public virtual Client Client{ get; set; }
+        public virtual User Client{ get; set; }
 
-        public List<Client> Clients { get; set; }
+        public List<User> Clients { get; set; }
 
         [Required]
         public DateTime ArrivalDate { get; set; }
