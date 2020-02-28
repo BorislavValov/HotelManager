@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
+
 namespace HotelManager.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
@@ -24,17 +25,19 @@ namespace HotelManager.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         [BindProperty]
@@ -79,6 +82,9 @@ namespace HotelManager.Areas.Identity.Pages.Account
 
             [Display(Name = "Are you 18 years old?")]
             public bool IsAdult { get; set; }
+
+            [Display(Name = "Is administrator (temporary field)")]
+            public bool IsAdmin { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -99,6 +105,27 @@ namespace HotelManager.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    string role;
+                    if (Input.IsAdmin)
+                    {
+                        role = "Admin";
+                    }
+                    else
+                    {
+                        role = "Client";
+                    }
+
+                    IdentityResult roleResult;
+                    var roleCheck = await _roleManager.RoleExistsAsync(role);
+                    if (!roleCheck)
+                    {
+                        //here in this line we are creating admin role and seed it to the database
+                        roleResult = await _roleManager.CreateAsync(new IdentityRole(role));
+                    }
+                    //here we are assigning the Admin role to the User that we have registered above
+                    await _userManager.AddToRoleAsync(user, role);
+
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
