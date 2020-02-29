@@ -73,8 +73,8 @@
                 @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
                 @*<button class="btn btn-danger btn-sm" asp-area="" asp-controller="Reservations" asp-action="Delete" asp-route-id="@item.Id">Cancel</button>*@
-                @*<a asp-action="Delete" asp-route-id="@item.Id">Cancel</a>*@
-                <input type="button" value="Cancel" onclick="location.href='@Url.Action("Delete", "Reservations",item.Id)'" />
+                <a asp-action="Delete" asp-route-id="@item.Id">Cancel</a>
+                @*<input type="button" value="Cancel" onclick="location.href='@Url.Action("Delete", "Reservations",item.Id)'" />*@
             </td>
         </tr>
 }

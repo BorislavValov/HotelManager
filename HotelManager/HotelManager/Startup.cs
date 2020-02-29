@@ -37,6 +37,7 @@ namespace HotelManager
             services.AddControllersWithViews();
 
             services.AddScoped<ReservationsRepository>();
+            services.AddScoped<RoomsRepository>();
             services.AddRazorPages();
         }
 
