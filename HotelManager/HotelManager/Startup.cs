@@ -12,6 +12,8 @@ using HotelManager.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using HotelManager.Repository;
+using HotelManager.Models;
 
 namespace HotelManager
 {
@@ -33,6 +35,8 @@ namespace HotelManager
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            services.AddScoped<ReservationsRepository>();
             services.AddRazorPages();
         }
 

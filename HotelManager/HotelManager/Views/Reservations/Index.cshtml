@@ -1,0 +1,82 @@
+﻿@model IEnumerable<HotelManager.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Room)
+            </th>
+            <th>
+                Arrival date
+            </th>
+            <th>
+                Departure date
+            </th>
+            <th>
+                Breakfast included
+            </th>
+            <th>
+                All inclusive
+            </th>
+            <th>
+                Total cost
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Room.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivalDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureDate)
+            </td>
+            <td>
+                 
+                    @if (item.BreakfastIncluded)
+                    {
+                        @:true
+                    }
+                    else
+                    {
+                        @:false
+                    }
+            </td>
+            <td>
+                @if (item.IsAllInclusive)
+                {
+                    @:true
+                }
+                else
+                {
+                    @:false
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice) лв
+            </td>
+            <td>
+                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
+                @*<button class="btn btn-danger btn-sm" asp-area="" asp-controller="Reservations" asp-action="Delete" asp-route-id="@item.Id">Cancel</button>*@
+                @*<a asp-action="Delete" asp-route-id="@item.Id">Cancel</a>*@
+                <input type="button" value="Cancel" onclick="location.href='@Url.Action("Delete", "Reservations",item.Id)'" />
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
