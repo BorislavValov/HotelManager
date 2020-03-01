@@ -38,6 +38,7 @@ namespace HotelManager
 
             services.AddScoped<ReservationsRepository>();
             services.AddScoped<RoomsRepository>();
+            services.AddScoped<UsersRepository>();
             services.AddRazorPages();
         }
 
