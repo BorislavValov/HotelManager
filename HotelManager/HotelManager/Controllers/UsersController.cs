@@ -71,11 +71,11 @@ namespace HotelManager.Controllers
                     FirstName = adminModel.FirstName,
                     MiddleName = adminModel.MiddleName,
                     LastName = adminModel.LastName,
-                    Email = adminModel.MiddleName,
+                    Email = adminModel.Email,
                     PhoneNumber = adminModel.PhoneNumber,
-                    EGN = adminModel.EGN
+                    EGN = adminModel.EGN,
                 };
-                await _usersRepository.CreateAdmin(user);
+                bool result = await _usersRepository.CreateAdmin(user,adminModel.Password);
                 return RedirectToAction(nameof(ListAllAdmins));
             }
             return View(adminModel);

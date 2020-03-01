@@ -59,11 +59,29 @@ namespace HotelManager.Repository
         {
             try
             {
-                user.IsAdmin = true;
-                user.DateHired = DateTime.Now;
-                _context.Update(user);
-                _context.SaveChanges();
-                await AssignUserToRole(user, "Admin");
+                IdentityUser userFind = await _userManager.FindByEmailAsync(user.Email);
+                User promotedUser = new User
+                {
+                    UserName = userFind.UserName,
+                    Email = user.Email,
+                    Id = userFind.Id,
+                    PasswordHash = user.PasswordHash,
+                    EmailConfirmed = userFind.EmailConfirmed,
+                    TwoFactorEnabled = userFind.TwoFactorEnabled
+                };
+                promotedUser.IsAdmin = true;
+                promotedUser.DateHired = DateTime.Now;
+                promotedUser.PhoneNumber = user.PhoneNumber;
+                promotedUser.EGN = user.EGN;
+                promotedUser.FirstName = user.FirstName;
+                promotedUser.MiddleName = user.MiddleName;
+                promotedUser.LastName = user.LastName;
+
+                //var updateResult = await _userManager.UpdateAsync(promotedUser);
+                var deleteResult = await _userManager.DeleteAsync(userFind);
+                var createResult = await _userManager.CreateAsync(promotedUser);
+
+                var roleResult = await AssignUserToRole(promotedUser, "Admin");
                 return true;
             }
             catch(Exception e)
@@ -81,6 +99,24 @@ namespace HotelManager.Repository
                 _context.UsersTable.Add(user);
                 await _context.SaveChangesAsync();
                 await AssignUserToRole(user, "Admin");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        //using UserManager
+        async public Task<bool> CreateAdmin(User user, string password)
+        {
+            try
+            {
+                user.DateHired = DateTime.Now;
+                user.IsAdmin = true;
+                user.UserName = user.Email;
+                var result = await _userManager.CreateAsync(user, password);
+                bool roleResult = await AssignUserToRole(user, "Admin");
                 return true;
             }
             catch
