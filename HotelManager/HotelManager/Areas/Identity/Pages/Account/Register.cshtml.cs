@@ -110,6 +110,7 @@ namespace HotelManager.Areas.Identity.Pages.Account
                     if (Input.IsAdmin)
                     {
                         role = "Admin";
+                        user.IsAdmin = true;
                     }
                     else
                     {
